@@ -55,6 +55,7 @@ dependencies {
     implementation "com.google.android.material:material:$material_version"
     implementation "com.google.dagger:hilt-android:$hilt_version"
     implementation "com.jakewharton.timber:timber:$timber_version"
+    implementation "com.michael-bull.kotlin-result:kotlin-result:$kotlinresult_version"
     implementation "io.coil-kt:coil:$coil_version"
 
     testImplementation project(path: ":testing")
