@@ -11,7 +11,10 @@ import com.chesire.nekome.core.Resource
 import com.chesire.nekome.core.extensions.postError
 import com.chesire.nekome.core.extensions.postSuccess
 import com.chesire.nekome.core.flags.AsyncState
+import com.chesire.nekome.trending.api.ErrorT
 import com.chesire.nekome.trending.api.TrendingApi
+import com.github.michaelbull.result.fold
+import com.github.michaelbull.result.mapBoth
 import kotlinx.coroutines.launch
 
 /**
@@ -27,12 +30,28 @@ class DiscoverViewModel @ViewModelInject constructor(
             AsyncState.Loading()
         )
         viewModelScope.launch {
-            when (val animeList = trending.getTrendingAnime()) {
-                is Resource.Success -> trendingData.postSuccess(
-                    animeList.data.map { mapper.toTrendingModel(it) }
+            trending.getTrendingAnime()
+                .mapBoth(
+                    { data -> trendingData.postSuccess(data.map { mapper.toTrendingModel(it) }) },
+                    { error ->
+                        when (error) {
+                            is ErrorT.InvalidCredentials -> {
+                                trendingData.postError(DiscoverError.Error)
+                            }
+                            is ErrorT.CouldNotReach -> {
+                                trendingData.postError(DiscoverError.Error)
+                            }
+
+                        }
+                    }
                 )
-                is Resource.Error -> trendingData.postError(DiscoverError.Error)
-            }
+
+            //when (val animeList = trending.getTrendingAnime()) {
+            //    is Resource.Success -> trendingData.postSuccess(
+            //        animeList.data.map { mapper.toTrendingModel(it) }
+            //    )
+            //    is Resource.Error -> trendingData.postError(DiscoverError.Error)
+            //}
         }
         return@lazy trendingData
     }
