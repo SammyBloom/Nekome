@@ -49,6 +49,8 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hilt_version"
     implementation "com.jakewharton.timber:timber:$timber_version"
     implementation "io.coil-kt:coil:$coil_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     testImplementation project(":testing")
     testImplementation "androidx.arch.core:core-testing:$coretesting_version"
